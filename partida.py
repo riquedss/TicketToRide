@@ -23,8 +23,6 @@ class Partida:
         self.jogadorAtual = 1
 
         self.cartas_selecionas_turno: List[CartaTrem] = []
-
-        print("partida inciada")
     
     def get_mesa(self):
         return self.mesa
@@ -85,10 +83,7 @@ class Partida:
     def passar_turno(self):
         jogadores = self.get_jogadores()
         num_jogador_atual = self.jogadorAtual
-
-        self.add_cartas_mao_jogador(jogadores[num_jogador_atual - 1])
         self.cartas_selecionas_turno.clear()
-
         self.turnoAtual += 1
         if(num_jogador_atual == len(jogadores)):
             self.jogadorAtual = 1 

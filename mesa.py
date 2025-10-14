@@ -105,7 +105,10 @@ class Mesa:
     def set_ofertaRota(self):
         self.ofertaRota = [self.get_baralhoRota().pegar_carta_topo() for _ in range(3)]
     
-    def pegar_oferta_trem(self, posicao):
+    def pegar_oferta_trem(self, posicao, qtd):
+        if(self.ofertaTrem[posicao].locomotiva() and qtd > 0):
+            print("\nNão pode comprar locomotiva")
+            return None
         carta = self.ofertaTrem.pop(posicao)
         self.ofertaTrem.append(self.baralhoTrem.pegar_carta_topo())
         return carta
