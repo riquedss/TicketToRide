@@ -8,6 +8,9 @@ class CartaTrem(Carta):
     def __init__(self, cor: CorTrem):
         self.cor = cor
 
+    def locomotiva(self):
+        return self.cor.value == "Locomotiva"
+
 class CartaRota(Carta):
     def __init__(self, requisitos: List[CorTrem], valor: int):
         self.requisitos = requisitos

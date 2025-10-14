@@ -14,6 +14,9 @@ class Jogador:
 
     def comprar_carta(self):
         print("Comprando carta")
+    
+    def add_carta_mao(self, carta):
+        self.cartasTrem.append(carta)
 
     def mostrar_cartas(self):
         print("\nCartas de Trem na sua mão:")

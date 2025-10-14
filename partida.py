@@ -87,6 +87,7 @@ class Partida:
         num_jogador_atual = self.jogadorAtual
 
         self.add_cartas_mao_jogador(jogadores[num_jogador_atual - 1])
+        self.cartas_selecionas_turno.clear()
 
         self.turnoAtual += 1
         if(num_jogador_atual == len(jogadores)):

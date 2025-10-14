@@ -26,29 +26,27 @@ while True:
                 limpar_terminal()
 
                 print(f"Jogador {partida.get_jogador_atual()}, você deve escolher duas cartas não locomotiva ou 1 locomotiva da mesa.")
-                while partida.qtd_cartas_selecionadas_turno() < 2:
+                pegou_carta_locomotiva_mesa = False
+                while partida.qtd_cartas_selecionadas_turno() < 2 and not pegou_carta_locomotiva_mesa:
                     partida.get_mesa().mostrar_mesa()
                     carta = None
 
-                    escolha_carta = input(f"\nJogador {partida.get_jogador_atual()}, digite (1) para escolher uma carta do topo do baralho e (2) para pegar as ofertadas na mesa.")
+                    escolha_carta = input(f"\nJogador {partida.get_jogador_atual()}, digite (1) para escolher uma carta do topo do baralho e (2) para pegar as ofertadas na mesa.\n")
                     if escolha_carta == "1":
                         carta = partida.get_mesa().get_baralhoTrem().pegar_carta_topo()
                     elif escolha_carta == "2":
                         index_carta_mesa = int(input("Escolha qual carta da mesa você quer pegar de 1 - 5\n"))
                         carta = partida.get_mesa().pegar_oferta_trem(index_carta_mesa - 1)
 
-                        if not partida.eh_escolha_valida_no_turno(carta):
-                            print("Escolha inválida neste turno! Tente outra carta.")
-                            continue
+                        if carta.locomotiva():
+                            pegou_carta_locomotiva_mesa = True
                     else:
                         print("Opção inválida")
 
                     partida.registrar_carta_escolhida(carta)
-                
-                
+
                 partida.passar_turno()
                 break
-
             case 2:
                 partida.get_mesa().mostrar_mesa()
             case 3:
@@ -56,7 +54,6 @@ while True:
             case 4:
                 partida.passar_turno()
                 break
-    
-    
-    
-    
+            case _:
+                print("Opção inválida")
+                break
