@@ -83,12 +83,20 @@ class Partida:
         return len(self.cartas_selecionas_turno)
 
     def passar_turno(self):
-        
+        jogadores = self.get_jogadores()
+        num_jogador_atual = self.jogadorAtual
+
+        self.add_cartas_mao_jogador(jogadores[num_jogador_atual - 1])
+
         self.turnoAtual += 1
-        if(self.get_jogador_atual() == len(self.get_jogadores())):
+        if(num_jogador_atual == len(jogadores)):
             self.jogadorAtual = 1 
         else:
             self.jogadorAtual += 1
+    
+    def add_cartas_mao_jogador(self, jogador_atual):
+        for carta in self.cartas_selecionas_turno:
+            jogador_atual.add_carta_mao(carta)
         
         
 
