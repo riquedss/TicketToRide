@@ -20,8 +20,6 @@ class Partida:
         self.mesa = mesa
         self.turnoAtual = 1
         self.jogadorAtual = 1
-
-        print("partida inciada")
     
     def get_mesa(self):
         return self.mesa
@@ -37,18 +35,41 @@ class Partida:
 
     def iniciar(self):
         mesa = self.get_mesa()
+        jogadores = self.get_jogadores()
+
+        cartasLocomotivas = []
+        for i, j in enumerate(jogadores,1):
+            cartasLocomotivas.append(mesa.get_baralhoTrem().pegar_carta_topo())
+
+        mesa.get_baralhoRota().embaralhar()
+        mesa.get_baralhoTrem().embaralhar()
+
+        for i, j in enumerate(jogadores,1):
+            cartasMaoTrem = []
+            cartasMaoRota = []
+            cartasMaoTrem.append(cartasLocomotivas.pop())
+            for _ in range(5):
+                cartasMaoTrem.append(mesa.get_baralhoTrem().pegar_carta_topo())
+            j.set_cartas_trem(cartasMaoTrem)
+            for _ in range(3):
+                cartasMaoRota.append(mesa.get_baralhoRota().pegar_carta_topo())
+                j.set_cartas_rota(cartasMaoRota)
+
         #Iniciando as ofertas na mesa
         mesa.set_ofertaTrem()
         mesa.set_ofertaRota()
+        
 
         #Mostrando as catas da mesa 
         mesa.mostrar_mesa()
-        print("Jogo iniciado!")
+        print("Jogo pronto para começar!")
 
     def exibir_acoes(self):
         print("\nO que você deseja fazer?" \
         "\n1 - Comprar cartas" \
-        "\n2 - Passar turno")
+        "\n2 - Exibir cartas da mesa" \
+        "\n3 - Exibir minhas cartas" \
+        "\n4 - Passar turno")
         return int(input().strip())
         
 

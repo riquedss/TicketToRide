@@ -8,7 +8,7 @@ class Baralho:
 
     def pegar_carta_topo(self) -> Carta:
         if self.cartas:
-            return self.cartas.pop(0)
+            return self.cartas.pop()
         return None
 
     def embaralhar(self):

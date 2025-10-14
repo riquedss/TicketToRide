@@ -13,8 +13,6 @@ class Mesa:
 
         self.baralhoTrem: Baralho = baralhoTrem
         self.baralhoRota: Baralho = baralhoRota
-        self.baralhoTrem.embaralhar()
-        self.baralhoTrem.embaralhar()
         self.ofertaTrem: List[CartaTrem] = []
         self.ofertaRota: List[CartaRota] = []
 
