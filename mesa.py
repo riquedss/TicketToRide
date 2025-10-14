@@ -104,6 +104,11 @@ class Mesa:
 
     def set_ofertaRota(self):
         self.ofertaRota = [self.get_baralhoRota().pegar_carta_topo() for _ in range(3)]
+    
+    def pegar_oferta_trem(self, posicao):
+        carta = self.ofertaTrem.pop(posicao)
+        self.ofertaTrem.append(self.baralhoTrem.pegar_carta_topo())
+        return carta
 
     def mostrar_mesa(self):
 
