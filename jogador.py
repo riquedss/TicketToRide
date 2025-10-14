@@ -1,27 +1,20 @@
 from typing import List
-from carta import CartaRota, CartaTrem, Carta
-
-class Mao:
-    def __init__(self):
-        self.cartasRota: List[CartaRota] = []
-        self.cartasTrem: List[CartaTrem] = []
+from carta import CartaRota, CartaTrem
         
 class Jogador:
     def __init__(self, num: int):
         self.num = num
-        self.mao = Mao()
+        self.cartasRota: List[CartaRota] = []
+        self.cartasTrem: List[CartaTrem] = []
         self.pontos = 0
 
     def descartar_rota(self, descartada: CartaRota) -> CartaRota:
-        if descartada in self.mao.cartasRota:
-            self.mao.cartasRota.remove(descartada)
-            return descartada
-        return None
+        # mais tarde.
+        pass
 
-    def comprar_carta(self, carta: Carta):
-        if isinstance(carta, CartaTrem):
-            self.mao.cartasTrem.append(carta)
+    def comprar_carta(self):
+        print("Comprando carta")
 
     def mostrar_cartas(self):
-        print(f"Jogador {self.num} - Cartas de Trem: {[c.cor.value for c in self.mao.cartasTrem]}")
-        print(f"Jogador {self.num} - Cartas de Rota: [{', '.join([f'{c.cidadeOrigem}-{c.cidadeDestino}' for c in self.mao.cartasRota])}]")
+        # mais tarde.
+        pass

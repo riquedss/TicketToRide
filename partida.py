@@ -18,12 +18,22 @@ class Partida:
 
         self.jogadores = jogadores
         self.mesa = mesa
-        self.turnoAtual = 0
+        self.turnoAtual = 1
+        self.jogadorAtual = 1
 
         print("partida inciada")
     
     def get_mesa(self):
         return self.mesa
+    
+    def get_jogadores(self):
+        return self.jogadores
+
+    def get_jogador_atual(self):
+        return self.jogadorAtual
+    
+    def set_jogador_atual(self, numJogador):
+        self.jogadorAtual = numJogador
 
     def iniciar(self):
         mesa = self.get_mesa()
@@ -35,9 +45,22 @@ class Partida:
         mesa.mostrar_mesa()
         print("Jogo iniciado!")
 
+    def exibir_acoes(self):
+        print("\nO que você deseja fazer?" \
+        "\n1 - Comprar cartas" \
+        "\n2 - Passar turno")
+        return int(input().strip())
+        
+
     def passar_turno(self):
-        self.turnoAtual = (self.turnoAtual + 1) % len(self.jogadores)
-        print(f"Turno de {self.jogadores[self.turnoAtual].nome}")
+        self.turnoAtual += 1
+        if(self.get_jogador_atual() == len(self.get_jogadores())):
+            self.jogadorAtual = 1 
+        else:
+            self.jogadorAtual += 1
+        
+        
+
 
 
 
