@@ -71,7 +71,8 @@ class Partida:
         "\n1 - Comprar cartas" \
         "\n2 - Exibir cartas da mesa" \
         "\n3 - Exibir minhas cartas" \
-        "\n4 - Passar turno")
+        "\n4 - Passar turno" \
+        "\n5 - Reivindicar cartas")
         return int(input().strip())
     
     def registrar_carta_escolhida(self, carta):

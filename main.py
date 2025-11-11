@@ -65,6 +65,18 @@ while True:
             case 4:
                 partida.passar_turno()
                 break
+            case 5:
+                limpar_terminal()
+                jogador.mostrar_cartas_rotas()
+                try:
+                    rota_num = int(input("\nQual rota você deseja reivindicar? (Digite o número da rota)\n"))
+                    if jogador.reivindicar_rota(rota_num):
+                        print(f"Rota {rota_num} reivindicada com sucesso!")
+                    else:
+                        print(f"Não foi possível reivindicar a rota {rota_num}.")
+                except ValueError:
+                    print("ID de rota inválido.")
+
             case _:
                 print("Opção inválida")
                 break
