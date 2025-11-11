@@ -7,19 +7,29 @@ class Partida:
     def __init__(self): 
         #Define a quantidade de jogadores
         print("BEM VINDO AO ESTACAO TERMINAL")
-        print("Entre com a quantidade de jogadores (2-4): ")
-        num_jogadores = int(input().strip())
-        if num_jogadores < 2 or num_jogadores > 4:
-            print("Número inválido de jogadores. Encerrando o jogo.")
-            exit(1)
-        jogadores = List[Jogador]
+        num_jogadores = 0
+        while num_jogadores == 0:
+            print("Entre com a quantidade de jogadores (2-4): ")
+            try:
+                num_jogadores = int(input().strip())
+                if num_jogadores < 2 or num_jogadores > 4:
+                    print("Número inválido de jogadores. Tente novamente.\n")
+                    num_jogadores = 0
+                    continue
 
-        jogadores = [Jogador(i+1) for i in range(num_jogadores)]
+                jogadores = List[Jogador]
+                jogadores = [Jogador(i+1) for i in range(num_jogadores)]
+
+            except ValueError:
+                print("Entrada inválida. Tente novamente.\n")
+
+
         mesa = Mesa()  # Baralhos serão inicializados posteriormente
 
         self.jogadores = jogadores
         self.mesa = mesa
         self.turnoAtual = 1
+        self.final = -1 # Indica o turno final, -1 significa que o jogo não está na fase final
         self.jogadorAtual = 1
 
         self.cartas_selecionas_turno: List[CartaTrem] = []
@@ -86,6 +96,17 @@ class Partida:
         num_jogador_atual = self.jogadorAtual
         self.cartas_selecionas_turno.clear()
         self.turnoAtual += 1
+        if(self.get_mesa().get_baralhoTrem().esta_vazio()):
+            
+            if self.final == -1:
+                self.final = self.turnoAtual + len(jogadores)
+            if self.turnoAtual >= self.final:
+                print("\nFase final do jogo concluída! Calculando pontuações finais...")
+                print("\nPontuações finais:")
+                for jogador in jogadores:
+                    print(f"Jogador {jogador.num}: {jogador.pontos} pontos")
+                exit(0)
+
         if(num_jogador_atual == len(jogadores)):
             self.jogadorAtual = 1 
         else:

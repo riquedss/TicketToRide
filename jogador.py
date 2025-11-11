@@ -28,6 +28,8 @@ class Jogador:
 
         self.remover_cartas_usadas(carta_rota)
         self.descartar_rota(rota_num - 1)
+        self.pontos += carta_rota.valor
+        print(f"Rota reivindicada! Você ganhou {carta_rota.valor} pontos.")
         return True
 
     def add_carta_mao(self, carta):

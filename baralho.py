@@ -7,7 +7,7 @@ class Baralho:
         self.descarte: List[Carta] = []
 
     def pegar_carta_topo(self) -> Carta:
-        if self.cartas:
+        if not self.esta_vazio():
             return self.cartas.pop()
         return None
 

@@ -25,7 +25,7 @@ class Mesa:
                 nova_carta = CartaTrem(cor)
                 cartas_trem.append(nova_carta)
 
-        # Adicione mais 6 cartas de locomotiva
+        #Adicione mais 6 cartas de locomotiva
         for _ in range(6):
             nova_carta = CartaTrem(CorTrem.LOCOMOTIVA)
             cartas_trem.append(nova_carta)
@@ -110,7 +110,9 @@ class Mesa:
             print("\nNão pode comprar locomotiva")
             return None
         carta = self.ofertaTrem.pop(posicao)
-        self.ofertaTrem.append(self.baralhoTrem.pegar_carta_topo())
+        cartaNova = self.baralhoTrem.pegar_carta_topo()
+        if cartaNova:
+            self.ofertaTrem.append(self.baralhoTrem.pegar_carta_topo())
         return carta
 
     def mostrar_mesa(self):
