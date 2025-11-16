@@ -79,10 +79,11 @@ class Partida:
     def exibir_acoes(self):
         print("\nO que você deseja fazer?" \
         "\n1 - Comprar cartas" \
-        "\n2 - Exibir cartas da mesa" \
-        "\n3 - Exibir minhas cartas" \
-        "\n4 - Passar turno" \
-        "\n5 - Reivindicar cartas")
+        "\n2 - Comprar cartas rota" \
+        "\n3 - Exibir cartas da mesa" \
+        "\n4 - Exibir minhas cartas" \
+        "\n5 - Passar turno" \
+        "\n6 - Reivindicar cartas")
         return int(input().strip())
     
     def registrar_carta_escolhida(self, carta):

@@ -65,16 +65,74 @@ while True:
                         print("\nVocê já executou compra neste turno.")
                     input("Pressione enter para finalizar compra.")
                     limpar_terminal()
+
                 case 2:
                     limpar_terminal()
-                    partida.get_mesa().mostrar_mesa()
+                    if(not comprado):
+                        print(f"Escolha duas entre as quatro cartas rota.")
+                        mesa = partida.get_mesa()
+                        baralho_rota = mesa.get_baralhoRota()
+                        cartas_mostradas = []
+
+                        for _ in range(4):
+                            carta = baralho_rota.pegar_carta_topo()
+                            if carta:
+                                cartas_mostradas.append(carta)
+
+                        if not cartas_mostradas:
+                            print("Baralho de rotas vazio!")
+                        else:
+                            print("\nCartas de Rota disponíveis:")
+                            for i, c in enumerate(cartas_mostradas, 1):
+                                cores = [c2.value for c2 in c.requisitos]
+                                if len(cores) > 1:
+                                    requisitos = ", ".join(cores[:-1]) + " e " + cores[-1]
+                                else:
+                                    requisitos = cores[0]
+                                print(f"{i}: {requisitos} (Valor: {c.valor})")
+
+                            escolhidas = set()
+
+                            alvo = 2 if len(cartas_mostradas) >= 2 else len(cartas_mostradas)
+                            while len(escolhidas) < alvo:
+                                try:
+                                    escolha = int(input(f"\nEscolha a carta rota #{len(escolhidas)+1} (1-{len(cartas_mostradas)}): "))
+                                except ValueError:
+                                    print("Entrada inválida.")
+                                    continue
+                                if escolha < 1 or escolha > len(cartas_mostradas):
+                                    print("Opção inválida.")
+                                    continue
+                                if escolha in escolhidas:
+                                    print("Você já escolheu essa carta.")
+                                    continue
+                                escolhidas.add(escolha)
+
+                            for idx in sorted(escolhidas):
+                                carta = cartas_mostradas[idx-1]
+                                jogador.cartasRota.append(carta)
+                                print(f"Adicionada à sua mão: rota de {carta.valor} pontos")
+
+                            for i, c in enumerate(cartas_mostradas, 1):
+                                if i not in escolhidas:
+                                    baralho_rota.cartas.insert(0, c)
+
+                        comprado = True
+                    else:
+                        print("\nVocê já executou compra neste turno.")
+                    input("Pressione enter para finalizar compra.")
+                    limpar_terminal()
+                
                 case 3:
                     limpar_terminal()
-                    jogador.mostrar_cartas()
+                    partida.get_mesa().mostrar_mesa()
                 case 4:
+                    limpar_terminal()
+                    jogador.mostrar_cartas()
+                case 5:
                     partida.passar_turno()
                     break
-                case 5:
+                case 6:
                     limpar_terminal()
                     jogador.mostrar_cartas_rotas()
                     try:
