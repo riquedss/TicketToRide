@@ -1,151 +1,170 @@
 from partida import Partida
 import os
 
-
 def limpar_terminal():
-    if os.name == 'nt':
+    """Limpa o console do terminal."""
+    if os.name == 'nt': # Windows
         _ = os.system('cls')
-    else:
+    else: # Mac/Linux
         _ = os.system('clear')
 
-
+# --- Início do Jogo ---
 partida = Partida()
 partida.iniciar()
 input("\nPressione Enter para continuar...")
 
+# --- Loop Principal do Jogo ---
 while True:
     limpar_terminal()
-    if(partida.get_mesa().get_baralhoTrem().esta_vazio()):
-        print("O baralho de Trem acabou. Esta será sua ultima jogada!")
-    jogador = partida.get_jogadores()[partida.get_jogador_atual() - 1]
-    input(f"\nJogador {partida.get_jogador_atual()}, pressione enter para iniciar seu turno.")
-    partida.get_mesa().mostrar_mesa()
-    jogador.mostrar_cartas()
-    comprado = False
-    while True:
-        try: 
-            match partida.exibir_acoes():
-                case 1:
+    
+    jogador = partida.get_jogador_atual()
+    
+    print("--- ESTAÇÃO TERMINAL ---")
+    print(f"Turno {partida.turno_atual} - Jogador {jogador.num} (Pontos: {jogador.pontos})")
+    
+    # Notificação de última rodada
+    if partida.turno_final != -1:
+        turnos_restantes = (partida.turno_final - partida.turno_atual) + 1
+        print(f"(!) BARALHO VAZIO. Esta é a última rodada. Faltam {turnos_restantes} turnos.")
+
+    
+    # --- FASE 1: AÇÃO PRINCIPAL (Comprar Trem ou Rota) ---
+    acao_principal_realizada = False
+    acao_compra_trem = False
+    
+    while not acao_principal_realizada:
+        try:
+            acao = partida.exibir_acoes_principais()
+            
+            match acao:
+                case 1: # 1. Comprar Cartas de Trem
+                    acao_principal_realizada = True
+                    acao_compra_trem = True # Sinaliza para ir para a Fase 2
+
+                case 2: # 2. Comprar Cartas Rota do Baralho (Encerra o Turno)
                     limpar_terminal()
-                    if(not comprado):
-                        print(f"Jogador {partida.get_jogador_atual()}, você pode escolher duas cartas não locomotiva ou 1 locomotiva da mesa.")
-                        pegou_carta_locomotiva_mesa = False
-                        while partida.qtd_cartas_selecionadas_turno() < 2 and not pegou_carta_locomotiva_mesa:
-                            partida.get_mesa().mostrar_mesa()
-                            carta = None
-
-                            escolha_carta = input(f"\nJogador {partida.get_jogador_atual()}, digite (1) para escolher uma carta do topo do baralho e (2) para pegar as ofertadas na mesa.\n")
-                            limpar_terminal()
-                        
-                            if escolha_carta == "1":
-                                carta = partida.get_mesa().get_baralhoTrem().pegar_carta_topo()
-
-                                if not carta:
-                                    print("Baralho vazio! Escolha outra opção.")
-
-                            elif escolha_carta == "2":
-                                index_carta_mesa = int(input(f"Escolha qual carta da mesa você quer pegar de 1 - {len(partida.get_mesa().get_ofertaTrem())}\n"))
-                                carta = partida.get_mesa().pegar_oferta_trem(index_carta_mesa - 1, partida.qtd_cartas_selecionadas_turno())
-
-                                if carta and carta.locomotiva():
-                                    pegou_carta_locomotiva_mesa = True
-                            else:
-                                print("Opção inválida.")
-
-                            if carta != None:
-                                partida.registrar_carta_escolhida(carta)
-                                print(f"Comprou uma carta Trem {carta.cor.value}")
-                        
-                            input("Pressione enter para continuar.")
-                        if carta != None:    
-                            partida.add_cartas_mao_jogador(jogador)
-                        
-                        comprado = True
-                    else:
-                        print("\nVocê já executou compra neste turno.")
-                    input("Pressione enter para finalizar compra.")
-                    limpar_terminal()
-
-                case 2:
-                    limpar_terminal()
-                    if(not comprado):
-                        print(f"Escolha duas entre as quatro cartas rota.")
-                        mesa = partida.get_mesa()
-                        baralho_rota = mesa.get_baralhoRota()
-                        cartas_mostradas = []
-
-                        for _ in range(4):
-                            carta = baralho_rota.pegar_carta_topo()
-                            if carta:
-                                cartas_mostradas.append(carta)
-
-                        if not cartas_mostradas:
-                            print("Baralho de rotas vazio!")
-                        else:
-                            print("\nCartas de Rota disponíveis:")
-                            for i, c in enumerate(cartas_mostradas, 1):
-                                cores = [c2.value for c2 in c.requisitos]
-                                if len(cores) > 1:
-                                    requisitos = ", ".join(cores[:-1]) + " e " + cores[-1]
-                                else:
-                                    requisitos = cores[0]
-                                print(f"{i}: {requisitos} (Valor: {c.valor})")
-
-                            escolhidas = set()
-
-                            alvo = 2 if len(cartas_mostradas) >= 2 else len(cartas_mostradas)
-                            while len(escolhidas) < alvo:
-                                try:
-                                    escolha = int(input(f"\nEscolha a carta rota #{len(escolhidas)+1} (1-{len(cartas_mostradas)}): "))
-                                except ValueError:
-                                    print("Entrada inválida.")
-                                    continue
-                                if escolha < 1 or escolha > len(cartas_mostradas):
-                                    print("Opção inválida.")
-                                    continue
-                                if escolha in escolhidas:
-                                    print("Você já escolheu essa carta.")
-                                    continue
-                                escolhidas.add(escolha)
-
-                            for idx in sorted(escolhidas):
-                                carta = cartas_mostradas[idx-1]
-                                jogador.cartasRota.append(carta)
-                                print(f"Adicionada à sua mão: rota de {carta.valor} pontos")
-
-                            for i, c in enumerate(cartas_mostradas, 1):
-                                if i not in escolhidas:
-                                    baralho_rota.cartas.insert(0, c)
-
-                        comprado = True
-                    else:
-                        print("\nVocê já executou compra neste turno.")
-                    input("Pressione enter para finalizar compra.")
-                    limpar_terminal()
-                
-                case 3:
+                    if partida.comprar_cartas_rota():
+                        acao_principal_realizada = True
+                        acao_compra_trem = False # Pula a fase de reivindicação
+                    
+                case 3: # 3. Exibir cartas da Mesa
                     limpar_terminal()
                     partida.get_mesa().mostrar_mesa()
-                case 4:
+                    input("\nPressione Enter para continuar...")
+
+                case 4: # 4. Exibir minhas cartas
                     limpar_terminal()
                     jogador.mostrar_cartas()
-                case 5:
-                    partida.passar_turno()
-                    break
-                case 6:
-                    limpar_terminal()
-                    jogador.mostrar_cartas_rotas()
-                    try:
-                        rota_num = int(input("\nQual rota você deseja reivindicar? (Digite o número da rota)\n"))
-                        if jogador.reivindicar_rota(rota_num):
-                            print(f"Rota {rota_num} reivindicada com sucesso!")
-                        else:
-                            print(f"Não foi possível reivindicar a rota {rota_num}.")
-                    except ValueError:
-                        print("ID de rota inválido.")
-
+                    input("\nPressione Enter para continuar...")
+                
                 case _:
-                    print("Opção inválida")
-                    break
+                    print("Opção inválida, tente novamente.")
+
         except Exception as e:
-            print(f"Ocorreu um erro. Entre com uma ação válida. Detalhes do erro: {e}")
+            print(f"\nOcorreu um erro inesperado: {e}")
+        
+        # Limpa o terminal para a próxima fase
+        limpar_terminal()
+
+    # --- FASE 1.1: SUB-LOOP DE COMPRA DE TREM ---
+    if acao_compra_trem:
+        print(f"--- Jogador {jogador.num}: Fase de Compra de Trem ---")
+        
+        while partida.cartas_trem_compradas_no_turno < 2:
+            try:
+                partida.get_mesa().mostrar_mesa() # Mostra a mesa a cada compra
+                acao_compra = partida.exibir_acoes_compra_trem()
+                
+                match acao_compra:
+                    case 1: # Comprar do Baralho
+                        partida.comprar_carta_trem_baralho()
+                    
+                    case 2: # Comprar da Oferta
+                        try:
+                            pos_str = input("\nQual carta da mesa você quer? (1-5 ou '0' para voltar): ")
+                            if pos_str == '0':
+                                continue # Volta ao menu de compra
+                                
+                            pos = int(pos_str)
+                            partida.comprar_carta_trem_oferta(pos - 1)
+                        except ValueError:
+                            print("Entrada inválida.")
+                    
+                    case 3: # Exibir Mesa
+                        limpar_terminal()
+                        partida.get_mesa().mostrar_mesa()
+                    
+                    case 4: # Exibir Minhas Cartas
+                        limpar_terminal()
+                        jogador.mostrar_cartas()
+                        
+                    case _:
+                        print("Opção inválida.")
+                
+                input("\nPressione Enter para continuar...")
+                limpar_terminal()
+            
+            except Exception as e:
+                print(f"\nOcorreu um erro inesperado: {e}")
+
+    # --- FASE 2: SUB-LOOP DE REIVINDICAÇÃO  ---
+    if acao_compra_trem:
+        print(f"--- Jogador {jogador.num}: Fase de Reivindicação (Opcional) ---")
+        
+        while True: # Até o jogador passar o turno
+            try:
+                jogador.mostrar_cartas() # Mostra a mão para ajudar a decidir
+                acao_reiv = partida.exibir_acoes_reivindicacao()
+                
+                match acao_reiv:
+                    case 1: # 1. Reivindicar Rota da Mão
+                        try:
+                            rota_num_str = input("\nQual rota da mão você deseja reivindicar? (Digite o número ou '0' para voltar): ")
+                            if rota_num_str == '0':
+                                continue # Volta ao menu de reivindicação
+                                
+                            rota_num = int(rota_num_str)
+                            partida.reivindicar_rota_jogador(rota_num)
+                        except ValueError:
+                            print("ID de rota inválido.")
+                    
+                    case 2: # 2. Reivindicar Rota da Oferta da Mesa
+                        limpar_terminal()
+                        partida.get_mesa().mostrar_mesa()
+                        try:
+                            pos_str = input("\nQual carta Rota da mesa você quer? (1-3 ou '0' para voltar): ")
+                            if pos_str == '0':
+                                continue # Volta ao menu de reivindicação
+
+                            pos = int(pos_str)
+                            partida.reivindicar_carta_rota_oferta(pos - 1)
+                            
+                        except ValueError:
+                            print("Entrada inválida.")
+                    
+                    case 3: # 3. Exibir cartas da Mesa
+                        limpar_terminal()
+                        partida.get_mesa().mostrar_mesa()
+                    
+                    case 4: # 4. Exibir minhas cartas
+                        limpar_terminal()
+                        jogador.mostrar_cartas()
+                    
+                    case 5: # 5. FINALIZAR TURNO - Passar
+                        print("Passando o turno...")
+                        partida.passar_turno()
+                        break # Quebra o loop de reivindicação
+                    
+                    case _:
+                        print("Opção inválida.")
+                
+                input("\nPressione Enter para continuar...")
+                limpar_terminal()
+
+            except Exception as e:
+                print(f"\nOcorreu um erro inesperado: {e}")
+        
+    else: # Se o jogador comprou rotas
+        print("Ação de comprar rotas encerra o turno. Passando...")
+        partida.passar_turno()
+        input("\nPressione Enter para o próximo jogador...")

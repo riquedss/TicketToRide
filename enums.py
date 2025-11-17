@@ -1,9 +1,5 @@
 from enum import Enum
 
-# --------------------
-# Enumerações
-# --------------------
-
 class CorTrem(Enum):
     PRETO = "Preto"
     BRANCO = "Branco"
@@ -14,3 +10,11 @@ class CorTrem(Enum):
     ROXO = "Roxo"
     LARANJA = "Laranja"
     LOCOMOTIVA = "Locomotiva"
+
+class CidadeBonus(Enum):
+    CHICAGO = "Chicago"
+    DALLAS = "Dallas"
+    LOS_ANGELES = "Los Angeles"
+    MIAMI = "Miami"
+    NEW_YORK = "New York"
+    SEATTLE = "Seattle"

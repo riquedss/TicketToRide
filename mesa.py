@@ -1,135 +1,102 @@
 from typing import List
 from carta import CartaTrem, CartaRota
 from baralho import Baralho
-from carta import CartaTrem, CartaRota  
-from enums import CorTrem
+from enums import CorTrem, CidadeBonus 
+import fabrica_baralhos
 
 class Mesa:
     def __init__(self):   
-        cartasTrem = self.cartasTremDoJogo()
-        cartasRota = self.cartasRotaDoJogo()
-        baralhoTrem = Baralho(cartasTrem)
-        baralhoRota = Baralho(cartasRota) 
-
-        self.baralhoTrem: Baralho = baralhoTrem
-        self.baralhoRota: Baralho = baralhoRota
+        self.baralhoTrem: Baralho = fabrica_baralhos.criar_baralho_trem()
+        self.baralhoRota: Baralho = fabrica_baralhos.criar_baralho_rota()
         self.ofertaTrem: List[CartaTrem] = []
         self.ofertaRota: List[CartaRota] = []
 
-    def cartasTremDoJogo(self):
-         #Inicializa o baralho de trem
-        cartas_trem = []
-        for cor in CorTrem:
-            for _ in range(10):
-                # Crie uma nova carta de trem com a cor atual
-                nova_carta = CartaTrem(cor)
-                cartas_trem.append(nova_carta)
-
-        #Adicione mais 6 cartas de locomotiva
-        for _ in range(6):
-            nova_carta = CartaTrem(CorTrem.LOCOMOTIVA)
-            cartas_trem.append(nova_carta)
-        return cartas_trem
-
-    def cartasRotaDoJogo(self):
-        #Inicializa o baralho de rota
-        cartas_rota = []
-        cartas_rota = [
-        # 35 cartas com 2 cores
-        CartaRota([CorTrem.VERMELHO, CorTrem.LARANJA], 5),
-        CartaRota([CorTrem.AMARELO, CorTrem.AZUL], 5),
-        CartaRota([CorTrem.ROXO, CorTrem.VERDE], 6),
-        CartaRota([CorTrem.BRANCO, CorTrem.PRETO], 6),
-        CartaRota([CorTrem.VERMELHO, CorTrem.AZUL], 6),
-        CartaRota([CorTrem.LARANJA, CorTrem.VERDE], 6),
-        CartaRota([CorTrem.ROXO, CorTrem.AMARELO], 6),
-        CartaRota([CorTrem.BRANCO, CorTrem.AZUL], 6),
-        CartaRota([CorTrem.PRETO, CorTrem.VERDE], 5),
-        CartaRota([CorTrem.VERMELHO, CorTrem.BRANCO], 5),
-        CartaRota([CorTrem.LARANJA, CorTrem.AZUL], 6),
-        CartaRota([CorTrem.ROXO, CorTrem.PRETO], 6),
-        CartaRota([CorTrem.LARANJA, CorTrem.BRANCO], 5),
-        CartaRota([CorTrem.VERMELHO, CorTrem.PRETO], 5),
-        CartaRota([CorTrem.AZUL, CorTrem.VERDE], 6),
-        CartaRota([CorTrem.ROXO, CorTrem.LARANJA], 6),
-        CartaRota([CorTrem.AMARELO, CorTrem.VERMELHO], 5),
-        CartaRota([CorTrem.VERDE, CorTrem.BRANCO], 5),
-        CartaRota([CorTrem.AZUL, CorTrem.PRETO], 6),
-        CartaRota([CorTrem.AMARELO, CorTrem.ROXO], 6),
-        CartaRota([CorTrem.LARANJA, CorTrem.VERMELHO], 5),
-        CartaRota([CorTrem.PRETO, CorTrem.BRANCO], 5),
-        CartaRota([CorTrem.ROXO, CorTrem.AZUL], 6),
-        CartaRota([CorTrem.AMARELO, CorTrem.VERDE], 6),
-        CartaRota([CorTrem.AZUL, CorTrem.VERMELHO], 5),
-        CartaRota([CorTrem.VERDE, CorTrem.LARANJA], 5),
-        CartaRota([CorTrem.BRANCO, CorTrem.ROXO], 6),
-        CartaRota([CorTrem.PRETO, CorTrem.AMARELO], 6),
-        CartaRota([CorTrem.VERMELHO, CorTrem.VERDE], 5),
-        CartaRota([CorTrem.BRANCO, CorTrem.LARANJA], 5),
-        CartaRota([CorTrem.AZUL, CorTrem.AMARELO], 6),
-        CartaRota([CorTrem.PRETO, CorTrem.ROXO], 6),
-        CartaRota([CorTrem.AMARELO, CorTrem.BRANCO], 5),
-        CartaRota([CorTrem.VERDE, CorTrem.AZUL], 5),
-        CartaRota([CorTrem.LARANJA, CorTrem.PRETO], 6),
-
-        # 11 cartas com 3 cores
-        CartaRota([CorTrem.ROXO, CorTrem.VERMELHO, CorTrem.AZUL], 10),
-        CartaRota([CorTrem.LARANJA, CorTrem.VERDE, CorTrem.BRANCO], 11),
-        CartaRota([CorTrem.AMARELO, CorTrem.PRETO, CorTrem.ROXO], 11),
-        CartaRota([CorTrem.AZUL, CorTrem.BRANCO, CorTrem.VERMELHO], 10),
-        CartaRota([CorTrem.VERDE, CorTrem.ROXO, CorTrem.LARANJA], 11),
-        CartaRota([CorTrem.PRETO, CorTrem.AMARELO, CorTrem.BRANCO], 10),
-        CartaRota([CorTrem.VERMELHO, CorTrem.AZUL, CorTrem.ROXO], 11),
-        CartaRota([CorTrem.LARANJA, CorTrem.VERDE, CorTrem.PRETO], 10),
-        CartaRota([CorTrem.AMARELO, CorTrem.BRANCO, CorTrem.VERMELHO], 11),
-        CartaRota([CorTrem.AZUL, CorTrem.PRETO, CorTrem.VERDE], 10),
-        CartaRota([CorTrem.ROXO, CorTrem.LARANJA, CorTrem.AMARELO], 11),
-        ]
-        return cartas_rota
-    
-    def get_baralhoTrem(self):
+    def get_baralhoTrem(self) -> Baralho:
         return self.baralhoTrem
     
-    def get_baralhoRota(self):
+    def get_baralhoRota(self) -> Baralho:
         return self.baralhoRota
     
-    def get_ofertaTrem(self):
+    def get_ofertaTrem(self) -> List[CartaTrem]:
         return self.ofertaTrem
     
-    def get_ofertaRota(self):
+    def get_ofertaRota(self) -> List[CartaRota]:
         return self.ofertaRota
     
     def set_ofertaTrem(self):
         self.ofertaTrem = [self.get_baralhoTrem().pegar_carta_topo() for _ in range(5)]
+        # Remove Nones se o baralho for menor que 5
+        self.ofertaTrem = [carta for carta in self.ofertaTrem if carta]
+        # Garante a regra das locomotivas na inicialização
+        self._verificar_e_repor_oferta_trem()
 
     def set_ofertaRota(self):
         self.ofertaRota = [self.get_baralhoRota().pegar_carta_topo() for _ in range(3)]
+        # Remove Nones se o baralho for menor que 3
+        self.ofertaRota = [carta for carta in self.ofertaRota if carta]
     
-    def pegar_oferta_trem(self, posicao, qtd):
-        if(self.ofertaTrem[posicao].locomotiva() and qtd > 0):
-            print("\nNão pode comprar locomotiva")
+    def _verificar_e_repor_oferta_trem(self):
+        # Verifica se há 3 ou mais locomotivas na oferta de trem
+        cartas_validas = [c for c in self.ofertaTrem if c]
+        
+        while sum(1 for c in cartas_validas if c.locomotiva()) >= 3:
+            print("\n(!) 3 ou mais locomotivas na mesa! Descartando e repondo...")
+            
+            for carta in self.ofertaTrem:
+                self.baralhoTrem.descartar(carta)
+                
+            self.ofertaTrem = [self.baralhoTrem.pegar_carta_topo() for _ in range(5)]
+            cartas_validas = [c for c in self.ofertaTrem if c]
+            
+            if len(cartas_validas) < 3:
+                break
+
+
+    def pegar_oferta_trem(self, posicao: int) -> CartaTrem | None:
+        # Pega uma carta da oferta de trem na posição e a repõe.
+        if not (0 <= posicao < len(self.ofertaTrem)):
+            print("\nPosição inválida na oferta.")
             return None
-        carta = self.ofertaTrem.pop(posicao)
-        cartaNova = self.baralhoTrem.pegar_carta_topo()
-        if cartaNova:
-            self.ofertaTrem.append(self.baralhoTrem.pegar_carta_topo())
-        return carta
+            
+        carta_comprada = self.ofertaTrem.pop(posicao)
+        
+        carta_nova = self.baralhoTrem.pegar_carta_topo()
+        if carta_nova:
+            self.ofertaTrem.insert(posicao, carta_nova)
+        
+        self._verificar_e_repor_oferta_trem()
+        
+        return carta_comprada
+
+    def pegar_oferta_rota(self, posicao: int) -> CartaRota | None:
+        # Pega uma carta da oferta de rota na posição e a repõe.
+        if not (0 <= posicao < len(self.ofertaRota)):
+            print("\nPosição inválida na oferta.")
+            return None
+        
+        carta_comprada = self.ofertaRota.pop(posicao)
+        
+        carta_nova = self.baralhoRota.pegar_carta_topo()
+        if carta_nova:
+            self.ofertaRota.insert(posicao, carta_nova)
+            
+        return carta_comprada
+
 
     def mostrar_mesa(self):
-
-        print("\nCartas de Trem na mesa:")
+        print("\n" + "="*30)
+        print(" " * 9 + "MESA DO JOGO" + " " * 9)
+        print("="*30)
+        print("\n--- OFERTA DE TREM (MESA) ---")
+        if not self.ofertaTrem:
+            print("  (Vazio)")
         for i, c in enumerate(self.ofertaTrem, 1):
-            print(f"Trem {i}: {c.cor.value}")
-
-        #print("Cartas de Trem na mesa:".join(c.cor.value for c in self.ofertaTrem))
-
-        print("\nCartas de Rota na mesa:")
+            print(f"  [{i}] - {c.cor.value:<10}")
+        print("\n--- OFERTA DE ROTA (MESA) ---")
+        if not self.ofertaRota:
+            print("  (Vazio)")
         for i, c in enumerate(self.ofertaRota, 1):
-            cores = [c2.value for c2 in c.requisitos]
-            if len(cores) > 1:
-                requisitos = ", ".join(cores[:-1]) + " e " + cores[-1]
-            else:
-                requisitos = cores[0]
-            print(f"Rota {i}: {requisitos}")
-
-        #print("Cartas de Rota na mesa:".join(f"{c2.value}" for c in self.ofertaRota for c2 in c.requisitos))
+            cores = " e ".join([c2.value for c2 in c.requisitos])
+            bonus = f" (BÔNUS: {c.cidade_bonus.value})" if c.cidade_bonus else ""
+            print(f"  [{i}] - {c.valor:<2} pts | {cores}{bonus}")
+        print("="*30)
