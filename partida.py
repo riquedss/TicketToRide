@@ -3,9 +3,10 @@ from jogador import Jogador
 from mesa import Mesa
 from carta import CartaTrem, CartaRota
 from enums import CidadeBonus
-
 class Partida:
+    
     def __init__(self): 
+        #Define a quantidade de jogadores
         print("BEM VINDO AO ESTACAO TERMINAL")
         num_jogadores = 0
         while num_jogadores == 0:
@@ -17,18 +18,27 @@ class Partida:
                     num_jogadores = 0
                     continue
 
+                # Cria a lista de jogadores
                 jogadores = [Jogador(i+1) for i in range(num_jogadores)]
 
             except ValueError:
                 print("Entrada inválida. Tente novamente.\n")
 
+        if num_jogadores in [3, 4]:
+            shuffle_limit = 1 
+        else: # 2 jogadores
+            shuffle_limit = 0 
+            
+        mesa = Mesa(shuffle_limit)  
         self.jogadores: List[Jogador] = jogadores
-        self.mesa: Mesa = Mesa()
+        self.mesa = mesa
         self.turno_atual = 1
         self.turno_final = -1 
         self.idx_jogador_atual = 0 
         self.cartas_trem_compradas_no_turno = 0
         self.rota_da_mesa_reivindicada_neste_turno = False
+
+        self.cartas_selecionas_turno: List[CartaTrem] = []
     
     def get_mesa(self) -> Mesa:
         return self.mesa
@@ -118,7 +128,6 @@ class Partida:
         return True
 
     def _encerrar_jogo(self):
-        """Calcula e exibe as pontuações finais, incluindo pênaltis e bônus."""
         print("\n--- FIM DE JOGO ---")
         print("Calculando pontuações finais...")
         print("\nCalculando penalidades por rotas não completadas...")
@@ -131,7 +140,7 @@ class Partida:
                 print(f"Jogador {j.num} perde {penalidade} pontos por {len(j.cartasRota)} rota(s) na mão.")
                 j.pontos -= penalidade
             else:
-                print(f"Jogador {j.num} não tem pênaltis.")
+                print(f"Jogador {j.num} não tem penalidades.")
 
         # --- Lógica do Bônus de Mais Rotas ---
         print("\nCalculando bônus por mais rotas completadas...")
@@ -147,7 +156,7 @@ class Partida:
         
         if max_rotas > 0:
             for j in self.jogadores:
-                if len(j.rotas_compratadas) == max_rotas:jogadores_com_max_rotas.append(j)
+                if len(j.rotas_completadas) == max_rotas:jogadores_com_max_rotas.append(j)
         
         if jogadores_com_max_rotas:
             for j_bonus in jogadores_com_max_rotas:

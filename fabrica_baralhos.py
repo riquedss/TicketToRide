@@ -95,9 +95,9 @@ def _criar_lista_cartas_rota() -> List[CartaRota]:
 
     return cartas_rota_finais
 
-def criar_baralho_trem() -> Baralho:
+def criar_baralho_trem(shuffle_limit: int) -> Baralho:
     cartas = _criar_lista_cartas_trem()
-    return Baralho(cartas)
+    return Baralho(cartas, shuffle_limit=shuffle_limit) 
 
 def criar_baralho_rota() -> Baralho:
     cartas = _criar_lista_cartas_rota()

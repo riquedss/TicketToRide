@@ -1,34 +1,39 @@
 from typing import List
 from carta import Carta
-import random  # Movido para o topo do arquivo
+import random
 
 class Baralho:
-    # Responsável por gerenciar a pilha de compra e descarte de cartas.
-    def __init__(self, cartas: List[Carta]):
-        self.cartas: List[Carta] = cartas  # Pilha de compra
-        self.descarte: List[Carta] = []    # Pilha de descarte
+    def __init__(self, cartas: List[Carta], shuffle_limit: int = 100): 
+        self.cartas: List[Carta] = cartas
+        self.descarte: List[Carta] = []
+        self.shuffle_limit: int = shuffle_limit 
+        self.shuffle_count: int = 0        
         self.embaralhar()
 
     def pegar_carta_topo(self) -> Carta | None:
-        # Pega a carta do topo da pilha de compra.
         if self.esta_vazio():
-            print("Baralho de compra vazio. Reembaralhando o descarte...")
-            self._reembaralhar_do_descarte()
+            
+            if self.shuffle_count < self.shuffle_limit: 
+                print("Baralho de compra vazio. Reembaralhando o descarte...")
+                self._reembaralhar_do_descarte()
+            else:
+                print(f"Baralho vazio e limite de {self.shuffle_limit} reabastecimentos atingido.")
+                return None
 
         if not self.esta_vazio():
             return self.cartas.pop()
-        
-        print("Baralho e descarte estão vazios.")
+    
         return None
 
     def _reembaralhar_do_descarte(self):
-        # Reembaralha as cartas da pilha de descarte para a pilha de compra.
+        # Reembaralha o descarte de volta para o baralho de compra
         if not self.descarte:
             return
 
         self.cartas = self.descarte
         self.descarte = []
         random.shuffle(self.cartas)
+        self.shuffle_count += 1 
 
     def descartar(self, carta: Carta):
         if carta:

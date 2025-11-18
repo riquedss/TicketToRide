@@ -4,10 +4,8 @@ from abc import ABC, abstractmethod
 from collections import Counter
 
 class Carta(ABC):
-    # Classe base abstrata para todas as cartas.
     @abstractmethod
     def __repr__(self) -> str:
-        # Implementa a representação abstrata de Carta.
         pass
 
 class CartaTrem(Carta):
